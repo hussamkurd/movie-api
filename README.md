@@ -21,10 +21,18 @@ This project is a Node.js API for managing movie information. It allows users to
    git clone https://github.com/hussamkurd/movie-api
    cd movie-api
    ```
-## Install dependencies:
+2. Install dependencies:   
    ```bash
     npm install
    ```
+   
+3. write secret key:   
+   write your JWT_SECRET secret key VALUE in .env file  
+   ```bash
+   JWT_SECRET=your_secret_key
+   ```
+
+
 ## Usage
   Starting the Server
   Run the following command to start the API server:
@@ -32,6 +40,15 @@ This project is a Node.js API for managing movie information. It allows users to
   npm start
   ```
 ### API Endpoints
+before requesting any endpoint, you need to generate a token
+  ```bash
+     GET /get-token: return a token
+  ```
+Then, you can set the token in any of the following endpoints by passing it as an auth header 
+  ```bash
+   Authorization: Bearer ${token}
+   ```
+End points
   ```bash
   POST /movies: Create a new movie
   GET /movies: Retrieve all movies
