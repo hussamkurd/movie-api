@@ -3,10 +3,30 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 const Movie = require('./database/movie'); // Import the Movie model
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
 
 app.use(bodyParser.json());
 
+function generateToken() {
+    const payload = {
+    };
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+}
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (token == null) return res.sendStatus(401); // No token present
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403); // Invalid token
+        next();
+    });
+}
 // Define routes here
+app.get('/get-token', (req, res) => {
+    const token = generateToken();
+    res.json({ token: token });
+});
 
 if (process.env.NODE_ENV !== 'test') {
     app.listen(port, () => {
@@ -16,7 +36,7 @@ if (process.env.NODE_ENV !== 'test') {
 
 
 // POST route to create a new movie
-app.post('/movies', async (req, res) => {
+app.post('/movies', authenticateToken, async (req, res) => {
     try {
         const newMovie = await Movie.create(req.body);
         res.status(201).json(newMovie);
@@ -27,7 +47,7 @@ app.post('/movies', async (req, res) => {
 });
 
 // GET route to retrieve movies
-app.get('/movies', async (req, res) => {
+app.get('/movies', authenticateToken, async (req, res) => {
     try {
         const movies = await Movie.findAll();
         res.json(movies);
@@ -37,7 +57,7 @@ app.get('/movies', async (req, res) => {
 });
 
 // GET route to retrieve movies
-app.get('/movies/:id', async (req, res) => {
+app.get('/movies/:id', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
         const movie = await Movie.findByPk(id);
@@ -48,7 +68,7 @@ app.get('/movies/:id', async (req, res) => {
 });
 
 // PUT or PATCH route to update a movie
-app.put('/movies/:id', async (req, res) => {
+app.put('/movies/:id', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
         const updated = await Movie.update(req.body, {
@@ -67,7 +87,7 @@ app.put('/movies/:id', async (req, res) => {
 });
 
 // DELETE route to delete a movie
-app.delete('/movies/:id', async (req, res) => {
+app.delete('/movies/:id', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
         const deleted = await Movie.destroy({
