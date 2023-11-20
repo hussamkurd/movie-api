@@ -18,7 +18,7 @@ This project is a Node.js API for managing movie information. It allows users to
 ### Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/hussamkurd/movie-api
+   git clone github.com/hussamkurd/movie-api.git
    cd movie-api
    ```
 2. Install dependencies:   
