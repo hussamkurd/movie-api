@@ -12,9 +12,9 @@ beforeAll(async () => {
 describe('POST /movies', () => {
     test('It should create a new movie', async () => {
         const newMovie = {
-            title: 'Test Movie',
-            description: 'Test Description',
-            cast: 'Test Cast'
+                title: 'Test Movie',
+                description: 'Test Description',
+                cast: 'Test Cast'
         };
         const response = await request(app)
             .post('/movies')
