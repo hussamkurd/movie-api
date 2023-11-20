@@ -41,17 +41,33 @@ This project is a Node.js API for managing movie information. It allows users to
   ```
 ### API Endpoints
 before requesting any endpoint, you need to generate a token
+
+GET /get-token: return a token
+
+sample of response
   ```bash
-     GET /get-token: return a token
+   {
+       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDA0MjE3MDQsImV4cCI6MTcwMDQyNTMwNH0.9uMCC7BbBPy_4qBkTb682U3vhl-_CRZl-H3zUJPJTlE"
+   }
   ```
 Then, you can set the token in any of the following endpoints by passing it as an auth header 
   ```bash
    Authorization: Bearer ${token}
    ```
-End points
-  ```bash
+Endpoints
   POST /movies: Create a new movie
-  GET /movies: Retrieve all movies
+  ```json
+   Content-Type: application/json
+   Authorization: Bearer {TOKEN}
+   {
+   "title": "Test Movie",
+   "description": "Test Description",
+   "cast": "Test Cast"
+   }
+  ```
+  Following the auth process you can use the following endpoints
+  ```bash
+  GET /movies: Retrieve all movies 
   GET /movies/:id: Retrieve a movie by ID
   PUT /movies/:id: Update a movie's information
   DELETE /movies/:id: Delete a movie
